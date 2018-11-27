@@ -1,25 +1,43 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Map, CircleMarker, TileLayer } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import data from './cities'
 
 class App extends Component {
+
   render() {
+    var centerLat = (data.minLat + data.maxLat) / 2;
+    var distanceLat = data.maxLat - data.minLat;
+    var bufferLat = distanceLat * 0.05;
+    var centerLong = (data.minLong + data.maxLong) / 2;
+    var distanceLong = data.maxLong - data.minLong;
+    var bufferLong = distanceLong * 0.05;
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <h3 style={{ textAlign: "center" }}>Most Populous Cities in Asia</h3>
+        <Map
+          style={{ height: "480px", width: "100%" }}
+          zoom={1}
+          center={[centerLat, centerLong]}
+          bounds={[
+            [data.minLat - bufferLat, data.minLong - bufferLong],
+            [data.maxLat + bufferLat, data.maxLong + bufferLong]
+          ]}
+        >
+          <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+          {data.city.map((city, k) => {
+            return (
+              <CircleMarker
+                key={k}
+                center={[city["coordinates"][1], city["coordinates"][0]]}
+                radius={20 * Math.log(city["population"] / 10000000)}
+                fillOpacity={0.5}
+                stroke={false}
+              />)
+          })
+          }
+        </Map>
       </div>
     );
   }
