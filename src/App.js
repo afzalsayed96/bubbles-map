@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, CircleMarker, TileLayer } from "react-leaflet";
+import { Map, CircleMarker, TileLayer, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import data from './cities'
 
@@ -34,7 +34,11 @@ class App extends Component {
                 radius={20 * Math.log(city["population"] / 10000000)}
                 fillOpacity={0.5}
                 stroke={false}
-              />)
+              >
+                <Tooltip direction="right" offset={[-8, -2]} opacity={1}>
+                  <span>{city["name"] + ": " + "Population" + " " + city["population"]}</span>
+                </Tooltip>
+              </CircleMarker>)
           })
           }
         </Map>
